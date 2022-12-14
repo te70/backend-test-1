@@ -1,0 +1,64 @@
+{
+  "name": "example_structure",
+  "version": "1.0.0",
+  "description": "Example Structure used by Alba Corp",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node --files index.ts",
+    "listen": "ts-node-dev --files --respawn index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alba Homes",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^15.0.0",
+    "express": "^4.17.2",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.5.3"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "^17.0.35",
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "ts-node": "^10.8.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.2"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "env": {
+      "es6": true,
+      "node": true,
+      "commonjs": true,
+      "browser": true
+    },
+    "rules": {
+      "brace-style": "off",
+      "comma-dangle": "off",
+      "no-unused-vars": [
+        "warn"
+      ],
+      "no-var": [
+        "off"
+      ],
+      "one-var": [
+        "off"
+      ],
+      "no-console": "off",
+      "global-require": "off",
+      "default-param-last": "off",
+      "no-useless-constructor": "off",
+      "class-methods-use-this": "off",
+      "quote-props": "off",
+      "no-underscore-dangle": "off",
+      "prefer-destructuring": "off",
+      "linebreak-style": "off"
+    }
+  }
+}
