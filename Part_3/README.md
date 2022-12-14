@@ -1,26 +1,26 @@
 # CLEAN architecture with MongoDB Test
 
-This CLEAN architecture example includes a User CRUD and Auth Login by default, plus MongoDB support
+This CLEAN architecture example includes a User CRUD and Auth Login by default, plus MongoDB support<br />
 You have to install MongoDB locally and specify a test collection url in the (.env) file like how its written in the (.env.example)
 
 # Current APIs
 
-GET /api/v1/users          (Get All Users)
-GET /api/v1/users/:id      (Get User by ID)
-POST /api/v1/users         (Add User)
-PATCH /api/v1/users/:id    (Update User by ID)
-DELETE /api/v1/users/:id   (Delete User by ID) (Requires Valid AccessToken)
+GET /api/v1/users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Get All Users)<br />
+GET /api/v1/users/:id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Get User by ID)<br />
+POST /api/v1/users&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Add User)<br />
+PATCH /api/v1/users/:id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Update User by ID)<br />
+DELETE /api/v1/users/:id&nbsp;&nbsp;&nbsp;(Delete User by ID) (Requires Valid AccessToken)<br />
 
-POST /api/v1/auth/login    (Login User)
+POST /api/v1/auth/login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Login User)<br />
 
 ## Add Blog post CRUD
 
-You have to add blog_post CRUD to this CLEAN architecture (refer to end of README for how the architecture works)
+You have to add blog_post CRUD to this CLEAN architecture (refer to end of README for how the architecture works)<br />
 You have to add it in the same way the Users CRUD was made with validation using Joi
 
 ## Add User Blog Post
 
-You have to add user_blog_post collection in mongoDB that links users and blog posts (many to many)
+You have to add user_blog_post collection in mongoDB that links users and blog posts (many to many)<br />
 It should have:
 1) user_id
 2) blog_post_id
@@ -31,8 +31,7 @@ Add user_blog_post while adding a blog_post and use the userId that is passed th
 
 You have to remove all user_blog_post and blog_post when user is deleted
 
-
-
+<br /><br />
 
 # Node Clean Architecture
 

@@ -1,8 +1,8 @@
 # Alba Corp Backend Test
 
-This test is a 2-DAY test with 3 Parts
-Part 1: NodeJS + ExpressJS APIs Test
-Part 2: JestJS tests Test
+This test is a 2-DAY test with 3 Parts.<br />
+Part 1: NodeJS + ExpressJS APIs Test<br />
+Part 2: JestJS tests Test<br />
 Part 3: CLEAN architecture with MongoDB Test
 
 The test is made to be sequential, you should do it by order.
