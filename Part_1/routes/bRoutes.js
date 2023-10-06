@@ -87,4 +87,18 @@ router.post('/add-blog', upload.single('mainImage'), upload.array('additionalIma
     }
 });
 
+router.get('/get-blog', (req, res) => {
+    const formattedBlogPosts = blogPosts.map((post) => ({
+        referenceNumber: post.referenceNumber,
+        title: post.title,
+        slug: post.title.toLowerCase().replace(/ /g, '_'),
+        description: post.description,
+        mainImage: post.mainImage,
+        additionalImages: post.additionalImages,
+        date_time: new Date(post.date_time).toISOString(),
+    }));
+
+    res.json(formattedBlogPosts);
+})
+
 module.exports = router;
