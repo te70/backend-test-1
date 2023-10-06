@@ -2,8 +2,10 @@ const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs-extra');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+const secretKey = 'secret';
 
 //config for file uploads
 const upload = multer({
@@ -99,6 +101,23 @@ router.get('/get-blog', (req, res) => {
     }));
 
     res.json(formattedBlogPosts);
-})
+});
+
+router.post('/generate-token', (req, res) => {
+    try {
+        const { image_path } = req.body;
+
+        if (!image_path) {
+            return res.status(500).json({ error: 'Image path is required' });
+        }
+
+        //create a token
+        const token = jwt.sign({image_path}, secretKey, {expiresIn: '5m'});
+
+        res.json({ token });
+    } catch(error){
+        res.status(500).json({error: 'There is an error'});
+    }
+});
 
 module.exports = router;
