@@ -120,4 +120,30 @@ router.post('/generate-token', (req, res) => {
     }
 });
 
+router.post('/generate-image', (req, res) => {
+    try {
+        const {token, image_path} = req.body;
+
+        if(!token || !image_path) {
+            return res.status(500).json({error: 'Token and image_path are required'});
+        }
+            //verify token
+            jwt.verify(token, secretKey, (err,decoded) => {
+                if(err) {
+                    return res.status(500).json({error: 'Invalid token'});     
+                }
+
+                //check if token is for image path
+                if (decoded.image.path !== image_path) {
+                    return res.status(500).json({error: 'Token does not match '})
+                }
+
+                //serve image
+                res.sendFile(image_path, {root: '.'});
+            });
+    } catch(error){
+        res.status(500).json({error: 'Internal server error'});
+    }
+});
+
 module.exports = router;
