@@ -3,14 +3,14 @@ const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs-extra');
 const jwt = require('jsonwebtoken');
-
+ 
 const router = express.Router();
 const secretKey = 'secret';
 
 //config for file uploads
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: {
+    limits: { 
         fileSize: 1 * 1024 * 1024,
     },
     fileFilter: (req, file, cb) => {
@@ -36,60 +36,82 @@ const generateReferenceNumber = () => {
 }
 
 //Route for adding a new blog post
-router.post('/add-blog', upload.single('mainImage'), upload.array('additionalImages', 5), async (req, res) => {
+const addBlogPost = async (req, res) => {
     try {
-        const{title, desc, date_time} = req.body;
+        const { title, desc, date_time, mainImages, additionalImages } = req.body;
 
-        //validate inputs
-        if(!title || title.length < 5 || title.length > 50 || description || description.length > 500 || !date_time || isNaN(date_time) || date_time <= Date.now()) {
-            throw new Error("Invalid input data");
+        // Validate inputs
+        if (!title || title.length < 5 || title.length > 50) {
+            return res.status(500).json({ error: 'Title must be between 5 and 50 characters' });
         }
 
-        //convert date to unix
+        if (!desc || desc.length > 500) {
+            return res.status(500).json({ error: 'Description cannot be empty and must be less than 500 characters' });
+        }
+
+        if (!date_time || isNaN(date_time) || date_time <= Date.now()) {
+            return res.status(500).json({ error: 'Invalid date_time' });
+        }
+
+        if (mainImages[0].size > 1024 * 1024) {
+            return res.status(500).json({ error: 'Main image size exceeded 1MB' });
+        }
+
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(title)) {
+            return res.status(500).json({ error: 'Title has special characters' });
+        }
+
+        if (isNaN(date_time)) {
+            return res.status(500).json({ error: 'Date time is not a valid number' });
+        }
+
+        // Convert date to unix
         const unixDateTime = date_time instanceof Date ? date_time.getTime() : date_time;
 
         const referenceNumber = generateReferenceNumber();
 
-        //compress main image
-        const mainImageBuffer = await sharp(req.file.buffer).resize({width: 0.75 * req.file.size}).toBuffer();
-        
-        //compress additional images
-        const additionalImages = [];
-        for (let i = 0; i < req.files.length; i++) {
-            const compressedImage = await sharp(req.files[i].buffer).resize({width: 0.75 * req.files[i].size }).toBuffer();
-            additionalImages.push(compressedImage);
+        // Compress main image
+        const mainImageBuffer = await sharp(mainImages[0].buffer).resize({ width: 0.75 * mainImages[0].size }).toBuffer();
+
+        // Compress additional images
+        const additionalImagesBuffers = [];
+        for (let i = 0; i < additionalImages.length; i++) {
+            const compressedImage = await sharp(additionalImages[i].buffer).resize({ width: 0.75 * additionalImages[i].size }).toBuffer();
+            additionalImagesBuffers.push(compressedImage);
         }
 
-        //save images 
+        // Save images 
         const mainImageFileName = `images/main_${referenceNumber}.jpg`;
         fs.writeFileSync(mainImageFileName, mainImageBuffer);
-        const additionalImageFileNames = additionalImages.map((image, index) => {
+        const additionalImageFileNames = additionalImagesBuffers.map((image, index) => {
             const filename = `images/additional_${referenceNumber}_${index + 1}.jpg`;
             fs.writeFileSync(filename, image);
             return filename;
         });
 
-        //create blog post object
+        // Create blog post object
         const blogPost = {
             referenceNumber,
             title,
             desc,
             mainImage: mainImageFileName,
-            additionImages: additionalImageFileNames,
+            additionalImages: additionalImageFileNames,
             date_time: unixDateTime,
         };
 
-        //save the blog post to the JSON file
+        // Save the blog post to the JSON file
         blogPosts.push(blogPost);
         fs.writeFileSync('./blogs.json', JSON.stringify(blogPosts, null, 2));
 
         res.status(200).json(blogPost);
-    } catch(error) {
-        res.status(500).json({error: error.message});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-});
+};
 
-router.get('/get-blog', (req, res) => {
+
+
+const getBlogPosts = (req, res) => {
     const formattedBlogPosts = blogPosts.map((post) => ({
         referenceNumber: post.referenceNumber,
         title: post.title,
@@ -101,9 +123,11 @@ router.get('/get-blog', (req, res) => {
     }));
 
     res.json(formattedBlogPosts);
-});
+};
 
-router.post('/generate-token', (req, res) => {
+
+
+const generateToken =  (req, res) => {
     try {
         const { image_path } = req.body;
 
@@ -118,9 +142,11 @@ router.post('/generate-token', (req, res) => {
     } catch(error){
         res.status(500).json({error: 'There is an error'});
     }
-});
+};
 
-router.post('/generate-image', (req, res) => {
+
+
+const getImageByToken = (req, res) => {
     try {
         const {token, image_path} = req.body;
 
@@ -144,6 +170,15 @@ router.post('/generate-image', (req, res) => {
     } catch(error){
         res.status(500).json({error: 'Internal server error'});
     }
-});
+};
+
+router.post('/add-blog', upload.single('mainImage'), upload.array('additionalImages', 5), addBlogPost);
+router.get('/get-blog', getBlogPosts);
+router.post('/generate-token', generateToken);
+router.post('/generate-image', getImageByToken);
 
 module.exports = router;
+
+
+
+module.exports = { addBlogPost, generateToken, getImageByToken, getBlogPosts };
