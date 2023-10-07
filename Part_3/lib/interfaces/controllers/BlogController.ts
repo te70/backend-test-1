@@ -37,7 +37,7 @@ const generateReferenceNumber = () => {
     return blogPosts.length > 0 ? blogPosts[blogPosts.length - 1].referenceNumber + 1: 1;
 }
 
-//Route for adding a new blog post
+
 const addBlogPost = async (req, res) => {
     try {
         const { title, desc, date_time } = req.body;
@@ -85,16 +85,15 @@ const addBlogPost = async (req, res) => {
         blogPosts.push(blogPost);
         fs.writeFileSync('./blogs.json', JSON.stringify(blogPosts, null, 2));
 
-        // Assuming you have middleware to extract userId from the access token
-        const userId = req.user.id; // Replace with how you access the userId
+       
+        const userId = req.user.id; 
 
-        // Create a new UserBlogPost entry
+       
         const userBlogPost = new UserBlogPost({
         user_id: userId,
-        blog_post_id: blogPost._id, // Assuming blogPost is the newly created blog post
+        blog_post_id: blogPost._id, 
         });
 
-        // Save the UserBlogPost entry
         await userBlogPost.save();
 
 
@@ -171,14 +170,12 @@ const deleteUser = async (req, res) => {
     try {
       const userId = req.params.id; 
   
-      // Find the user by ID
       const user = await User.findById(userId);
   
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
   
-      // Trigger the middleware to remove associated entries
       await user.remove();
   
       res.status(200).end(); 

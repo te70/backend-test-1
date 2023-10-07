@@ -6,39 +6,38 @@ describe('blog api routes', () => {
             body: {
               title: 'Sample Blog Post',
               desc: 'This is a sample blog post description.',
-              date_time: Date.now() + 1000000, // A future date
+              date_time: Date.now() + 1000000, 
             },
             file: {
-              buffer: Buffer.from('sample-main-image-data'), // Mocked main image buffer
+              buffer: Buffer.from('sample-main-image-data'), 
             },
             files: [
-              { buffer: Buffer.from('sample-additional-image-1-data') }, // Mocked additional image 1 buffer
-              { buffer: Buffer.from('sample-additional-image-2-data') }, // Mocked additional image 2 buffer
+              { buffer: Buffer.from('sample-additional-image-1-data') }, 
+              { buffer: Buffer.from('sample-additional-image-2-data') }, 
             ],
           };
       
-          // Mocked response object
+        
           const res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
           };
       
-          // Call the route handler function directly
+        
           await addBlogPost(req, res);
       
-          // Check the response status code
+         
           expect(res.status).toHaveBeenCalledWith(200);
       
-          // Check if the response JSON contains the added blog post with the expected fields
+        
           expect(res.json).toHaveBeenCalledWith(
             expect.objectContaining({
               referenceNumber: expect.any(Number),
               title: 'Sample Blog Post',
               desc: 'This is a sample blog post description.',
               date_time: expect.toBeGreaterThan(Date.now() + 1000000),
-              mainImage: expect.any(String), // Ensure it's a string representing the image path
-              additionalImages: expect.arrayContaining([expect.any(String)]), // Ensure it's an array of image paths
-              // Add other expected fields as needed
+              mainImage: expect.any(String), 
+              additionalImages: expect.arrayContaining([expect.any(String)]), 
             })
           );
     });
