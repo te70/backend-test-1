@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   
 });
 
-// Middleware to trigger before user deletion
 userSchema.pre('remove', async function (next) {
   try {
     await UserBlogPost.deleteMany({ user_id: this._id });
